@@ -197,9 +197,32 @@ def calculate_distance(p1, p2):
 
     return distance
 
+
 def calulate_edges(rect):
     assert len(rect) == 4, "Invalid number of points for input rectangle"
     edge1 = calculate_distance(rect[0], rect[1])
     edge2 = calculate_distance(rect[1], rect[2])
 
     return min(edge1, edge2), max(edge1, edge2)
+
+
+def subimage(image, center, theta, width, height):
+    '''
+    Rotates OpenCV image around center with angle theta (in deg)
+    then crops the image according to width and height.
+    '''
+
+    # Uncomment for theta in radians
+    # theta *= 180/np.pi
+
+    shape = (image.shape[1], image.shape[0])  # cv2.warpAffine expects shape in (length, height)
+
+    matrix = cv2.getRotationMatrix2D(center=center, angle=theta, scale=1)
+    image = cv2.warpAffine(src=image, M=matrix, dsize=shape)
+
+    x = int(center[0] - width / 2)
+    y = int(center[1] - height / 2)
+
+    image = image[y:y + height, x:x + width]
+
+    return image

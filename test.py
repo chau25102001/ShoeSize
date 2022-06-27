@@ -29,7 +29,7 @@ model = DataParallel(model).to(device)
 model.eval()
 
 test_dir = r"C:\Users\chau\Desktop\ShoeSizeProject\Images\new_images\front_view"
-
+papper_size = [21.0, 29.7]
 for i in os.listdir(test_dir):
     fig, ax = plt.subplots(2, 4, figsize=(10, 5))
     img = cv2.imread(os.path.join(test_dir, i))
@@ -72,10 +72,9 @@ for i in os.listdir(test_dir):
     ax[1, 1].imshow(cv2.drawContours(paper.copy(), [hull], -1, (0, 255, 0), 3))
 
     warp = four_point_transform(pred, hull[:, 0, :])
-    ax[1, 2].imshow(warp, cmap='gray')
     foot = 255 - warp
 
-    foot_contour = cv2.findContours(foot[int(foot.shape[0] * 0.0):int(foot.shape[0] * 0.8), :], cv2.RETR_EXTERNAL,
+    foot_contour = cv2.findContours(foot[:int(foot.shape[0] * 1), :], cv2.RETR_EXTERNAL,
                                     cv2.CHAIN_APPROX_SIMPLE)
     cnt = imutils.grab_contours(foot_contour)
     cnt = max(cnt, key=cv2.contourArea)
@@ -85,10 +84,31 @@ for i in os.listdir(test_dir):
     box = np.int0(cv2.boxPoints(rect))
     for p in box:
         p[1] += int(foot.shape[0] * 0.0)
-    ax[1, 3].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
-    angle = math.radians(max(rect[-1], 90-rect[-1]))
-    edge1, edge2 = calulate_edges(box)
 
-    horizontal_proj = edge2 * math.sin(angle)
-    vertical_proj = edge2 * math.cos(angle)
+    ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
+
+    center = ((box[0] + box[2]) // 2).astype(np.uint8)
+    # ax[1, 3].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
+    angle = math.radians(max(rect[-1], 90 - rect[-1]))
+    edge1, edge2 = calulate_edges(box)
+    # print("Angle: ", rect[-1])
+    theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
+    foot_box = subimage(foot, center, theta, int(edge1), int(edge2))
+    foot_box = np.where(foot_box > 127, 1, 0)
+    ax[1, 3].imshow(foot_box, cmap='gray')
+    edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.4), :])
+
+    horizontal_proj1 = edge1 * math.sin(angle)
+    vertical_proj1 = edge1 * math.cos(angle)
+
+    horizontal_proj2 = edge2 * math.cos(angle)
+    vertical_proj2 = edge2 * math.sin(angle)
+    scale_size = warp.shape[-1], warp.shape[-2]
+    scale_horizontal = papper_size[0] / scale_size[0]
+    scale_vertical = papper_size[1] / scale_size[1]
+    width = math.sqrt((horizontal_proj1 * scale_horizontal) ** 2 + (vertical_proj1 * scale_vertical) ** 2)
+    length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
+    ratio = width / length
+    print(ratio)
+    print(f"Width: {width}, Length: {length}")
     fig.show()
