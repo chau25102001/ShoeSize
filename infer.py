@@ -12,7 +12,7 @@ import warnings
 if __name__ == '__main__':
     warnings.filterwarnings('ignore')
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    model = SegFormer('MiT-B1', num_classes=3)
+    model = SegFormer('MiT-B1', num_classes=1)
 
     test_set = FeetDataset(
         root_path='Images',
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     )
     print(f"reading {len(test_set)} images")
 
-    checkpoint = torch.load('logs/run2/checkpoint_best.pt', map_location=device)
+    checkpoint = torch.load('logs/run3/checkpoint_best.pt', map_location=device)
     model.load_state_dict(checkpoint['state_dict'])
     model = DataParallel(model).to(device)
 
@@ -38,7 +38,8 @@ if __name__ == '__main__':
         img_ = img.unsqueeze(0).to(device)
 
         pred = model(img_)
-        pred = one_hot(torch.argmax(pred, dim=1)).float().squeeze(0).permute(2, 0, 1)
+        pred = torch.sigmoid(pred)
+        pred = torch.where(pred > 0.7, 1, 0)
         pred = pred * 255.0 / torch.max(pred)
         fig, ax = plt.subplots(1, 2)
         img = FeetDataset.denormalize(img.permute(1, 2, 0)).permute(2, 0, 1)

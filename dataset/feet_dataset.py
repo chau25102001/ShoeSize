@@ -63,13 +63,15 @@ class FeetDataset(Dataset):
             # transforms.HueSaturationValue(p=0.5),
             A.ElasticTransform(p=0.5, alpha=120, sigma=120 * 0.05, alpha_affine=120 * 0.03),
             transforms.GaussianBlur(p=0.5),
-            transforms.RandomSnow(p=0.5),
-            transforms.RandomShadow(p=0.7),
-            transforms.RandomBrightnessContrast(p=0.7),
-            transforms.ColorJitter(p=0.5),
+            transforms.GaussNoise(p=0.5),
+            # transforms.RandomSnow(p=0.5),
+            transforms.RandomShadow(shadow_roi=(0, 0.3, 1, 1), num_shadows_lower=1, num_shadows_upper=3,
+                                    shadow_dimension=8, p=1),
+            transforms.RandomBrightnessContrast(brightness_limit=0.3, contrast_limit=0.3, p=0.8),
+            # transforms.ColorJitter(p=0.5),
             # transforms.Transpose(p=0.5),
             # transforms.ChannelShuffle(p=0.5)
-        ], p=0.5)
+        ], p=0.6)
         trans_resize = resize.Resize(h, w)
         img_transform = tf.Compose([
             tf.ToTensor(),
@@ -113,7 +115,7 @@ class FeetDataset(Dataset):
         image, mask = self.transform(image, mask, self.img_size[0], self.img_size[1], self.use_aug,
                                      train=self.train)
 
-        return image, mask.permute(1, 2, 0)
+        return image, mask.permute(1, 2, 0)[-1].unsqueeze(0)
 
     @staticmethod
     def denormalize(image):
@@ -143,8 +145,7 @@ if __name__ == '__main__':
         img, mask = dataset[i]
         print(torch.unique(mask))
 
-        print(mask.shape)
         fig, ax = plt.subplots(1, 2)
         ax[0].imshow(FeetDataset.denormalize(img.permute(1, 2, 0)))
-        ax[1].imshow(torch.argmax(mask, dim=0))
+        ax[1].imshow(mask.permute(1, 2, 0), cmap='gray')
         plt.show()

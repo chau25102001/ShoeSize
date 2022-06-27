@@ -4,7 +4,7 @@ import torch
 from torch.utils.tensorboard import SummaryWriter
 from models.segformer import SegFormer
 from dataset.feet_dataset import FeetDataset
-from utils.criterion import MyCriterion
+from utils.criterion_1_class import MyCriterion
 from utils.functions import train_one_epoch
 from torch.optim import AdamW, Adam, SGD
 from torch.optim.lr_scheduler import CosineAnnealingLR
@@ -18,13 +18,13 @@ def main():
     cudnn.benchmark = True
     cudnn.deterministic = True
     cudnn.enabled = True
-    checkpoint_path = 'logs/run2'
+    checkpoint_path = 'logs/run5'
     writer_dict = {
         'writer': SummaryWriter(checkpoint_path),
         'steps': 0
     }
 
-    model = SegFormer(backbone='MiT-B1', num_classes=3)
+    model = SegFormer(backbone='MiT-B3', num_classes=1)
 
     train_set = FeetDataset(root_path='Images',
                             img_path='images',
@@ -57,7 +57,7 @@ def main():
     num_epoch = 100
     scheduler = CosineAnnealingLR(optimizer=optimizer,
                                   T_max=(num_epoch-10) * len(train_loader),
-                                  eta_min=1e-6)
+                                  eta_min=1e-7)
     best_score = 0
 
     for epoch in range(num_epoch):
@@ -65,13 +65,13 @@ def main():
                                                                           current_epoch=epoch,
                                                                           max_epoch=num_epoch,
                                                                           train_loader=train_loader,
-                                                                          num_classes=3,
+                                                                          num_classes=1,
                                                                           criterion=criterion,
                                                                           optimizer=optimizer,
                                                                           scheduler=scheduler,
                                                                           writer_dict=writer_dict,
                                                                           device=device,
-                                                                          weight_loss=[2/3, 1/3]
+                                                                          weight_loss=[0.5, 0.5]
                                                                           )
         torch.cuda.empty_cache()
 
