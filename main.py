@@ -106,8 +106,10 @@ def main():
         foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
         foot_box = remove_noise1(foot_box, (3, 3), 7)
         ax[1, 3].imshow(foot_box, cmap='gray')
-
-        edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.5), :])
+        if foot_box.shape[0] > foot_box[1]:
+            edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.5), :])
+        else:
+            edge1 = np.sum(foot_box[:, int(foot_box.shape[1] * 0.5)])
 
         horizontal_proj1 = edge1 * math.sin(angle)
         vertical_proj1 = edge1 * math.cos(angle)
