@@ -125,8 +125,8 @@ def refine_hull(hull_points, front=True):
             p3 = hull_points[(i + 2) % l][0]
 
             if (min(p1[0], p3[0]) < p2[0] < max(p1[0], p3[0]) and abs(
-                    p2[1] - (p1[1] + p3[1]) // 2) < 100) or (min(p1[1], p3[1]) < p2[1] < max(p1[1], p3[1]) and abs(
-                p2[0] - (p1[0] + p3[0]) // 2) < 100):  # a point in between 2 other point
+                    p2[1] - (p1[1] + p3[1]) // 2) < 80) or (min(p1[1], p3[1]) < p2[1] < max(p1[1], p3[1]) and abs(
+                p2[0] - (p1[0] + p3[0]) // 2) < 80):  # a point in between 2 other point
                 drop.append((i + 1) % l)
             if l - len(drop) == 4:
                 break
@@ -178,10 +178,10 @@ def refine_edge(img):
         x_min = int(512 * 0.25)
         x_max = int(512 * 0.75)
     else:
-        y_min = int(512 * 0.15)
-        y_max = int(512 * 0.85)
-        x_min = int(512 * 0.15)
-        x_max = int(512 * 0.85)
+        y_min = int(512 * 0.1)
+        y_max = int(512 * 0.9)
+        x_min = int(512 * 0.1)
+        x_max = int(512 * 0.9)
 
     img[:, :y_min] = remove_noise2(img[:, :y_min], kernel_size=(5, 1), iterations=5)
     img[:, y_max:] = remove_noise2(img[:, y_max:], kernel_size=(5, 1), iterations=5)
@@ -230,30 +230,38 @@ def subimage(image, center, theta, width, height):
 def convert(width, length, mode = 'length'):
     result = None
     if mode == 'length':
-        if length <= 24.4:
-            result = ['7', '6', '40']
+        if length <= 23.5:
+            result = ['6', '5.5', '39']
+        elif length <= 24.1:
+            result = ['6.5', '6', '39']
+        elif length <= 24.4:
+            result = ['7', '6.5', '40']
         elif length <= 24.8:
-            result = ['7.5', '6.5', '40 - 41']
-        elif length <= 25.2:
-            result = ['8', '7', '41']
+            result = ['7.5', '7', '40 - 41']
+        elif length <= 25.4:
+            result = ['8', '7.5', '41']
         elif length <= 25.7:
-            result = ['8.5', '7.5', '41 - 42']
-        elif length <= 26:
-            result = ['9', '8', '42']
-        elif length <= 26.5:
-            result = ['9.5', '8.5', '42 - 43']
-        elif length <= 26.8:
-            result = ['10', '9', '43']
+            result = ['8.5', '8', '41 - 42']
+        elif length <= 26.0:
+            result = ['9', '8.5', '42']
+        elif length <= 26.7:
+            result = ['9.5', '9', '42 - 43']
+        elif length <= 27.0:
+            result = ['10', '9.5', '43 - 44']
         elif length <= 27.3:
-            result = ['10.5', '9.5', '43 - 44']
-        elif length <= 27.8:
-            result = ['11', '10', '44']
+            result = ['10.5', '10', '44 - 44.5']
+        elif length <= 27.9:
+            result = ['11', '10.5', '44 - 45']
         elif length <= 28.3:
-            result = ['11.5', '10.5', '44 - 45']
+            result = ['11.5', '11', '44 - 45']
         elif length <= 28.6:
-            result = ['12', '11', '45']
+            result = ['12', '11.5', '45 - 46']
         elif length <= 29.4:
-            result = ['13', '12', '46']
+            result = ['13', '12.5', '46 - 47']
+        elif length <= 30.2:
+            result = ['14', '13.5', '47 - 48']
+        elif length <= 31:
+            result = ['15', '14.5', '48 - 49']
 
     else:
         if width <= 9.8:
