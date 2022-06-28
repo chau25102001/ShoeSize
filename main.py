@@ -68,7 +68,7 @@ def main():
         contours = cv2.findContours(pred, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnt = imutils.grab_contours(contours)
         cnt = max(cnt, key=cv2.contourArea)
-        epsilon = 0.015 * cv2.arcLength(cnt, True)
+        epsilon = 0.008 * cv2.arcLength(cnt, True)
         approx = cv2.approxPolyDP(cnt, epsilon, True)
         paper = cv2.cvtColor(pred, cv2.COLOR_GRAY2RGB)
         hull = cv2.convexHull(approx)
