@@ -68,7 +68,7 @@ def main():
         contours = cv2.findContours(pred, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnt = imutils.grab_contours(contours)
         cnt = max(cnt, key=cv2.contourArea)
-        epsilon = 0.02 * cv2.arcLength(cnt, True)
+        epsilon = 0.01 * cv2.arcLength(cnt, True)
         approx = cv2.approxPolyDP(cnt, epsilon, True)
         paper = cv2.cvtColor(pred, cv2.COLOR_GRAY2RGB)
         hull = cv2.convexHull(approx)
@@ -105,7 +105,7 @@ def main():
         foot_box = subimage(foot, center, theta, int(edge1), int(edge2))
         foot_box = np.where(foot_box > 127, 1, 0)
         ax[1, 3].imshow(foot_box, cmap='gray')
-        edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.4), :])
+        edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.3), :])
 
         horizontal_proj1 = edge1 * math.sin(angle)
         vertical_proj1 = edge1 * math.cos(angle)
