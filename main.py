@@ -104,8 +104,10 @@ def main():
 
         foot_box = subimage(foot, center, theta, int(edge1), int(edge2))
         foot_box = np.where(foot_box > 127, 1, 0)
+        foot_bos = remove_noise2(foot_box, (5, 5), 5)
         ax[1, 3].imshow(foot_box, cmap='gray')
-        edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.3), :])
+
+        edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.5), :])
 
         horizontal_proj1 = edge1 * math.sin(angle)
         vertical_proj1 = edge1 * math.cos(angle)
