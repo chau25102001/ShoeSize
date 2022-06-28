@@ -24,7 +24,11 @@ def main():
         tf.Normalize(FeetDataset.mean, FeetDataset.std)
     ])
     # B0: run1, run4
-    checkpoint = torch.load('logs/run4/checkpoint_best.pt', map_location=device)
+    @st.cache
+    def load_model():
+        return torch.load('logs/run4/checkpoint_best.pt', map_location=device)
+
+    checkpoint = load_model()
     model.load_state_dict(checkpoint['state_dict'])
     model = DataParallel(model).to(device)
 
