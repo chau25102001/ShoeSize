@@ -120,12 +120,12 @@ def main():
         scale_horizontal = papper_size[0] / scale_size[0]
         scale_vertical = papper_size[1] / scale_size[1]
         width = math.sqrt((horizontal_proj1 * scale_horizontal) ** 2 + (vertical_proj1 * scale_vertical) ** 2)
-        length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2) * 1.2 + 1.5
+        length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2) * 1.1 + 1.5
         st.pyplot(fig)
 
         st.text(f"Width: {round(width, 2)}, Length: {round(length, 2)}, Width/Length: {width / length}")
         size_length = convert(width, length, mode='length')
-        size_width = convert(width, length, mode = 'length')
+        size_width = convert(width, length, mode='width')
 
         if size_length:
             st.text(f"Shoe size is: US {size_length[0]}, UK {size_length[1]}, VN {size_length[2]}")
