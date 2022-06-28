@@ -119,7 +119,7 @@ def main():
         length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
         st.pyplot(fig)
 
-        st.text(f"Width: {width}, Length: {length}, Width/Length: {width / length}")
+        st.text(f"Width: {width}, Length: {length * 1.05 + 1.5}, Width/Length: {width / length}")
 
 
 if __name__ == "__main__":
