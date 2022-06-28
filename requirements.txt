@@ -3,7 +3,7 @@ numpy
 tqdm
 pywick
 pillow
-opencv-python
+opencv-python-headless
 torchvision
 streamlit
 imutils

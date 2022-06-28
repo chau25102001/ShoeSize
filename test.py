@@ -74,8 +74,10 @@ for i in os.listdir(test_dir):
     warp = four_point_transform(pred, hull[:, 0, :])
     foot = 255 - warp
 
-    foot_contour = cv2.findContours(foot[:int(foot.shape[0] * 1), :], cv2.RETR_EXTERNAL,
-                                    cv2.CHAIN_APPROX_SIMPLE)
+    foot_contour = cv2.findContours(
+        foot[int(foot.shape[0] * 0.1):int(foot.shape[0] * 0.9), int(foot.shape[1] * 0.1):int(foot.shape[1] * 0.9)],
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
     cnt = imutils.grab_contours(foot_contour)
     cnt = max(cnt, key=cv2.contourArea)
     epsilon = 0.01 * cv2.arcLength(cnt, True)
@@ -83,7 +85,8 @@ for i in os.listdir(test_dir):
     rect = cv2.minAreaRect(approx)
     box = np.int0(cv2.boxPoints(rect))
     for p in box:
-        p[1] += int(foot.shape[0] * 0.0)
+        p[1] += int(foot.shape[0] * 0.1)
+        p[0] += int(foot.shape[1] * 0.1)
 
     ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
 
