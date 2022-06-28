@@ -103,7 +103,7 @@ def main():
         theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
 
         foot_box = subimage(foot, center, theta, int(edge1), int(edge2))
-        foot_box = np.where(foot_box > 127, 1, 0).astype(np.uinit8)
+        foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
         foot_box = remove_noise2(foot_box, (5, 5), 5)
         ax[1, 3].imshow(foot_box, cmap='gray')
 
