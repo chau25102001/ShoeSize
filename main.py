@@ -123,7 +123,16 @@ def main():
         length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
         st.pyplot(fig)
 
-        st.text(f"Width: {width}, Length: {length * 1.05 + 1.5}, Width/Length: {width / length}")
+        st.text(f"Width: {round(width, 2)}, Length: {round(length * 1.05 + 1.5, 2)}, Width/Length: {width / length}")
+        size_length = convert(width, length, mode='length')
+        size_width = convert(width, length, mode = 'length')
+
+        if size_length:
+            st.text(f"Shoe size is: US {size_length[0]}, UK {size_length[1]}, VN {size_length[2]}")
+        elif size_width:
+            st.text(f"Shoe size is: US {size_width[0]}, UK {size_width[1]}, VN {size_width[2]}")
+        else:
+            st.text("Cannot measure, please take another picture!")
 
 
 if __name__ == "__main__":

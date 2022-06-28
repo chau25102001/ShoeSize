@@ -226,3 +226,55 @@ def subimage(image, center, theta, width, height):
     image = image[y:y + height, x:x + width]
 
     return image
+
+def convert(width, length, mode = 'length'):
+    result = None
+    if mode == 'length':
+        if length <= 24.4:
+            result = ['7', '6', '40']
+        elif length <= 24.8:
+            result = ['7.5', '6.5', '40 - 41']
+        elif length <= 25.2:
+            result = ['8', '7', '41']
+        elif length <= 25.7:
+            result = ['8.5', '7.5', '41 - 42']
+        elif length <= 26:
+            result = ['9', '8', '42']
+        elif length <= 26.5:
+            result = ['9.5', '8.5', '42 - 43']
+        elif length <= 26.8:
+            result = ['10', '9', '43']
+        elif length <= 27.3:
+            result = ['10.5', '9.5', '43 - 44']
+        elif length <= 27.8:
+            result = ['11', '10', '44']
+        elif length <= 28.3:
+            result = ['11.5', '10.5', '44 - 45']
+        elif length <= 28.6:
+            result = ['12', '11', '45']
+        elif length <= 29.4:
+            result = ['13', '12', '46']
+
+    else:
+        if width <= 9.8:
+            result = ['5.5', '5', '38']
+        elif width <= 10:
+            result = ['6', '5.5', '39']
+        elif width <= 10.2:
+            result = ['7', '6.5', '40']
+        elif width <= 10.4:
+            result = ['8', '7.5', '41']
+        elif width <= 10.6:
+            result = ['9', '8.5', '42']
+        elif width <= 10.8:
+            result = ['10', '9.5', '43']
+        elif width <= 11:
+            result = ['11', '10.5', '44']
+
+    return result
+
+
+
+
+
+
