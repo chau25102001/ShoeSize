@@ -77,10 +77,10 @@ def main():
         paper = cv2.cvtColor(pred, cv2.COLOR_GRAY2RGB)
         hull = cv2.convexHull(approx)
         hull = refine_hull(hull, True)
+        hull = np.array([[i] for i in hull]).astype(np.int32)
         if len(hull.shape) == 4:
             hull = hull[:, 0, :, :]
         ax[1, 1].imshow(cv2.drawContours(paper.copy(), [hull], -1, (0, 255, 0), 3))
-
         warp = four_point_transform(pred, hull[:, 0, :])
         foot = 255 - warp
 
@@ -101,7 +101,6 @@ def main():
         ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
 
         center = ((box[0] + box[2]) // 2).astype(np.uint8)
-        # ax[1, 3].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
         angle = math.radians(max(rect[-1], 90 - rect[-1]))
         edge1, edge2 = calulate_edges(box)
         theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
@@ -124,7 +123,11 @@ def main():
         scale_horizontal = papper_size[0] / scale_size[0]
         scale_vertical = papper_size[1] / scale_size[1]
         width = math.sqrt((horizontal_proj1 * scale_horizontal) ** 2 + (vertical_proj1 * scale_vertical) ** 2)
-        length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2) * 1.02 + 1.5
+        length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
+        factor = 1.02
+        if width > 8.3 and length < 25:
+            factor = 1.2
+        length = length * factor + 1.5
         st.pyplot(fig)
 
         st.text(f"Width: {round(width, 2)}, Length: {round(length, 2)}, Width/Length: {width / length}")
@@ -132,9 +135,9 @@ def main():
         size_width = convert(width, length, mode='width')
 
         if size_length:
-            st.text(f"Shoe size is: US {size_length[0]}, UK {size_length[1]}, VN {size_length[2]}")
+            st.text(f"Shoe size is: US {size_length[0]}, UK {size_length[1]}, EU {size_length[2]}")
         elif size_width:
-            st.text(f"Shoe size is: US {size_width[0]}, UK {size_width[1]}, VN {size_width[2]}")
+            st.text(f"Shoe size is: US {size_width[0]}, UK {size_width[1]}, EU {size_width[2]}")
         else:
             st.text("Cannot measure, please take another picture!")
 

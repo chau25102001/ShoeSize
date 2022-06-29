@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import math
+from sklearn.cluster import KMeans
 
 
 def apply_brightness_contrast(input_img, brightness=0, contrast=0):
@@ -113,26 +114,43 @@ def hist_match(sources, templates):
     return cv2.merge(result)
 
 
+def kmeans(points, n_cluster=4):
+    cluster = KMeans(n_clusters=n_cluster, random_state=0).fit(points)
+    return cluster.labels_
+
+
 def refine_hull(hull_points, front=True):
     if len(hull_points) == 4:
         return hull_points
     elif front:
-        l = len(hull_points)
-        drop = []
-        for i in range(l):
-            p1 = hull_points[i % l][0]
-            p2 = hull_points[(i + 1) % l][0]
-            p3 = hull_points[(i + 2) % l][0]
+        clusters = kmeans(hull_points[:, 0, :], n_cluster=4)
+        dict = {}
+        for i in np.unique(clusters):
+            dict[i] = []
+        for i, p in enumerate(hull_points):
+            label = clusters[i]
+            dict[label].append(p)
+        keep = []
+        for k in dict.keys():
+            curr_cluster = dict[k]
+            if len(curr_cluster) == 1:
+                keep.append(curr_cluster[0])
+                continue
+            else:
+                max_dis = 0
+                other_points = [v for key, v in dict.items() if key != k]
+                candidate = None
+                for p1 in curr_cluster:
+                    curr_dis = 0
+                    for p2 in other_points:
+                        curr_dis += calculate_distance(p1[0], p2[0][0])
 
-            if (min(p1[0], p3[0]) < p2[0] < max(p1[0], p3[0]) and abs(
-                    p2[1] - (p1[1] + p3[1]) // 2) < 80) or (min(p1[1], p3[1]) < p2[1] < max(p1[1], p3[1]) and abs(
-                p2[0] - (p1[0] + p3[0]) // 2) < 80):  # a point in between 2 other point
-                drop.append((i + 1) % l)
-            if l - len(drop) == 4:
-                break
-        result = np.array([[hull_points[i]] for i in range(l) if i not in drop])
+                    if curr_dis > max_dis:
+                        max_dis = curr_dis
+                        candidate = p1
+                keep.append(candidate)
+        return order_points(np.array(keep)[:, 0, :])
 
-        return result
 
 
 def order_points(pts):
@@ -227,7 +245,8 @@ def subimage(image, center, theta, width, height):
 
     return image
 
-def convert(width, length, mode = 'length'):
+
+def convert(width, length, mode='length'):
     result = None
     if mode == 'length':
         if length <= 23.5:
@@ -280,9 +299,3 @@ def convert(width, length, mode = 'length'):
             result = ['11', '10.5', '44']
 
     return result
-
-
-
-
-
-

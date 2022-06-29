@@ -3,8 +3,9 @@ numpy
 tqdm
 pywick
 pillow
-opencv-python-headless
 torchvision
 streamlit
 imutils
 matplotlib
+opencv-python
+scikit-learn
