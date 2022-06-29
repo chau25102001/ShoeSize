@@ -112,21 +112,21 @@ def main():
         ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(foot.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
         # ax[1, 2].axis('off')
 
-        center = ((box[0] + box[2]) // 2).astype(np.uint8)
+        # center = ((box[0] + box[2]) // 2).astype(np.uint8)
         angle = math.radians(max(rect[-1], 90 - rect[-1]))
         edge1, edge2 = calulate_edges(box)
-        theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
-        st.text(f"foot shape: {foot.shape}, center: {center}, box {box}, theta: {theta}")
-        foot_box, new_box = subimage(foot, theta, box)
-        foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
-        foot_box = remove_noise1(foot_box, (3, 3), 5)
-        ax[1, 3].imshow(cv2.drawContours(cv2.cvtColor(foot_box.copy(), cv2.COLOR_GRAY2RGB), [new_box], -1, (0, 255, 0), 3), cmap = 'gray')
-        ax[1, 3].axis('off')
-
-        if foot_box.shape[0] > foot_box.shape[1]:
-            edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.5), :])
-        else:
-            edge1 = np.sum(foot_box[:, int(foot_box.shape[1] * 0.5)])
+        # theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
+        # st.text(f"foot shape: {foot.shape}, center: {center}, box {box}, theta: {theta}")
+        # foot_box, new_box = subimage(foot, theta, box)
+        # foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
+        # foot_box = remove_noise1(foot_box, (3, 3), 5)
+        # ax[1, 3].imshow(cv2.drawContours(cv2.cvtColor(foot_box.copy(), cv2.COLOR_GRAY2RGB), [new_box], -1, (0, 255, 0), 3), cmap = 'gray')
+        # ax[1, 3].axis('off')
+        #
+        # if foot_box.shape[0] > foot_box.shape[1]:
+        #     edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.5), :])
+        # else:
+        #     edge1 = np.sum(foot_box[:, int(foot_box.shape[1] * 0.5)])
 
         horizontal_proj1 = edge1 * math.sin(angle)
         vertical_proj1 = edge1 * math.cos(angle)
@@ -153,6 +153,7 @@ def main():
             st.text(f"Shoe size is: US {size_width[0]}, UK {size_width[1]}, EU {size_width[2]}")
         else:
             st.text("Cannot measure, please take another picture!")
+
 
 if __name__ == "__main__":
     main()

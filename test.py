@@ -95,14 +95,14 @@ for p in box:
 ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
 
 center = ((box[0] + box[2]) // 2).astype(np.uint8)
-# ax[1, 3].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
 angle = math.radians(max(rect[-1], 90 - rect[-1]))
 edge1, edge2 = calulate_edges(box)
-# print("Angle: ", rect[-1])
 theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
-foot_box = subimage(foot, center, theta, int(edge1), int(edge2))
-foot_box = np.where(foot_box > 127, 1, 0)
-ax[1, 3].imshow(foot_box, cmap='gray')
+print(box.shape)
+foot_box, new_box = subimage(foot, theta, box)
+foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
+foot_box = remove_noise1(foot_box, (3, 3), 5)
+ax[1, 3].imshow(cv2.drawContours(cv2.cvtColor(foot_box.copy(), cv2.COLOR_GRAY2RGB), [new_box], -1, (0, 255, 0), 3), cmap = 'gray')
 edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.4), :])
 
 horizontal_proj1 = edge1 * math.sin(angle)
