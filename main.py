@@ -23,8 +23,9 @@ def main():
         tf.ToTensor(),
         tf.Normalize(FeetDataset.mean, FeetDataset.std)
     ])
+
     # B0: run1, run4
-    @st.cache
+    @st.cache(suppress_st_warning=True, allow_output_mutation=True)
     def load_model():
         return torch.load('logs/run4/checkpoint_best.pt', map_location=device)
 
