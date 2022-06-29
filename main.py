@@ -100,7 +100,7 @@ def main():
             p[1] += int(foot.shape[0] * 0.1)
             p[0] += int(foot.shape[1] * 0.1)
 
-        ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(warp.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
+        ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(foot.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
 
         center = ((box[0] + box[2]) // 2).astype(np.uint8)
         angle = math.radians(max(rect[-1], 90 - rect[-1]))
