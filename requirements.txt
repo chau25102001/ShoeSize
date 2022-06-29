@@ -7,5 +7,5 @@ torchvision
 streamlit
 imutils
 matplotlib
-opencv-python
+opencv-python-headless
 scikit-learn
