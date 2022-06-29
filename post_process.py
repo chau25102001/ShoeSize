@@ -224,7 +224,7 @@ def calulate_edges(rect):
     return min(edge1, edge2), max(edge1, edge2)
 
 
-def subimage(image, center, theta, width, height):
+def subimage(image, theta, box):
     '''
     Rotates OpenCV image around center with angle theta (in deg)
     then crops the image according to width and height.
@@ -234,11 +234,11 @@ def subimage(image, center, theta, width, height):
     # theta *= 180/np.pi
 
     shape = (image.shape[1], image.shape[0])  # cv2.warpAffine expects shape in (length, height)
-
+    center = ((box[0] + box[2]) // 2).astype(np.uint8)
     matrix = cv2.getRotationMatrix2D(center=center, angle=theta, scale=1)
     image = cv2.warpAffine(src=image, M=matrix, dsize=shape)
 
-    return image
+    return image, cv2.transform(box, matrix)
 
 
 def convert(width, length, mode='length'):
