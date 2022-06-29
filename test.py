@@ -3,6 +3,7 @@ import os
 
 import cv2
 import imutils
+import numpy as np
 
 from models.segformer import SegFormer
 from dataset.feet_dataset import FeetDataset
@@ -73,6 +74,8 @@ for i in os.listdir(test_dir):
     ax[1, 1].imshow(cv2.drawContours(paper.copy(), [hull], -1, (0, 255, 0), 3))
     warp = four_point_transform(pred, hull[:, 0, :])
     foot = 255 - warp
+    if foot.shape[0] < foot.shape[1]:
+        foot = np.transpose(foot)
 
     foot_contour = cv2.findContours(
         foot[int(foot.shape[0] * 0.1):int(foot.shape[0] * 0.9), int(foot.shape[1] * 0.1):int(foot.shape[1] * 0.9)],
