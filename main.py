@@ -110,7 +110,7 @@ def main():
             p[0] += int(foot.shape[1] * 0.1)
 
         ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(foot.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
-        ax[1, 2].axis('off')
+        # ax[1, 2].axis('off')
 
         center = ((box[0] + box[2]) // 2).astype(np.uint8)
         angle = math.radians(max(rect[-1], 90 - rect[-1]))
