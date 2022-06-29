@@ -105,7 +105,7 @@ def main():
         angle = math.radians(max(rect[-1], 90 - rect[-1]))
         edge1, edge2 = calulate_edges(box)
         theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
-
+        st.text(foot.shape)
         foot_box = subimage(foot, center, theta, int(edge1), int(edge2))
         foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
         foot_box = remove_noise1(foot_box, (3, 3), 7)
@@ -126,8 +126,6 @@ def main():
         width = math.sqrt((horizontal_proj1 * scale_horizontal) ** 2 + (vertical_proj1 * scale_vertical) ** 2)
         length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
         factor = 1.02
-        if width > 8.3 and length < 23:
-            factor = 1.2
         length = length * factor + 1.5
         st.pyplot(fig)
 
