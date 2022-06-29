@@ -154,5 +154,5 @@ def main():
         else:
             st.text("Cannot measure, please take another picture!")
 
-        if __name__ == "__main__":
-            main()
+if __name__ == "__main__":
+    main()
