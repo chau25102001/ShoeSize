@@ -113,5 +113,5 @@ for i in os.listdir(test_dir):
     length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
     ratio = width / length
     print(ratio)
-    print(f"Width: {width}, Length: {length * 1.05 + 1.5}")
+    print(f"Width: {width}, Length: {length}")
     fig.show()

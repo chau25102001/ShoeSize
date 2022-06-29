@@ -125,7 +125,7 @@ def main():
         width = math.sqrt((horizontal_proj1 * scale_horizontal) ** 2 + (vertical_proj1 * scale_vertical) ** 2)
         length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
         factor = 1.02
-        if width > 8.3 and length < 25:
+        if width > 8.3 and length < 23:
             factor = 1.2
         length = length * factor + 1.5
         st.pyplot(fig)
