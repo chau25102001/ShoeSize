@@ -29,7 +29,8 @@ model = DataParallel(model).to(device)
 
 model.eval()
 
-test_dir = r"C:\Users\chau\Desktop\ShoeSizeProject\Images\new_images\front_view"
+test_dir = r"C:\Users\chau\Desktop\ShoeSizeProject\Images\new_images\side_view"
+i = 'chan16.jpg'
 papper_size = [21.0, 29.7]
 
 fig, ax = plt.subplots(2, 4, figsize=(10, 5))
