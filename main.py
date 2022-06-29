@@ -128,6 +128,9 @@ def main():
         length = math.sqrt((horizontal_proj2 * scale_horizontal) ** 2 + (vertical_proj2 * scale_vertical) ** 2)
         factor = 1.02
         length = length * factor + 1.5
+        for a in ax:
+            a.set_xticks([])
+            a.set_yticks([])
         st.pyplot(fig)
 
         st.text(f"Width: {round(width, 2)}, Length: {round(length, 2)}, Angle: {round(rect[-1], 2)}")
