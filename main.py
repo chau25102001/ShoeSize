@@ -116,7 +116,7 @@ def main():
         angle = math.radians(max(rect[-1], 90 - rect[-1]))
         edge1, edge2 = calulate_edges(box)
         theta = rect[-1] if rect[-1] < 45 else rect[-1] - 90
-        st.text(foot.shape, center, int(edge1), int(edge2), theta)
+        st.text(f"foot shape: {foot.shape}, center: {center}, short edge: {int(edge1)}, long edge: {int(edge2)}, theta: {theta}")
         foot_box = subimage(foot, center, theta, int(edge1), int(edge2))
         foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
         foot_box = remove_noise1(foot_box, (3, 3), 7)
