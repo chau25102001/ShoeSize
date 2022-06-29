@@ -47,16 +47,21 @@ def main():
         img_h = cv2.resize(img, (512, 512), interpolation=cv2.INTER_LINEAR)
         img_h = cv2.cvtColor(img_h, cv2.COLOR_BGR2RGB)
         ax[0, 0].imshow(img_h)
+        ax[0, 0].axis('off')
 
         # img = hist_match(img, template).astype(np.uint8)
 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = remove_shadow(img, 7, 7)
         ax[0, 1].imshow(cv2.resize(img, (512, 512), interpolation=cv2.INTER_LINEAR))
+        ax[0, 1].axis('off')
         img = apply_brightness_contrast(img, 15, -25)
         ax[0, 2].imshow(cv2.resize(img, (512, 512), interpolation=cv2.INTER_LINEAR))
+        ax[0, 2].axis('off')
+
         img = sharpen(img)
         ax[0, 3].imshow(cv2.resize(img, (512, 512), interpolation=cv2.INTER_LINEAR))
+        ax[0, 3].axis('off')
 
         img = trans_resize(image=img)['image']
         img = img_transform(img).unsqueeze(0).to(device)
@@ -67,6 +72,8 @@ def main():
         pred = pred * 255.0 / torch.max(pred)
         pred = pred.squeeze(0).permute(1, 2, 0).cpu().numpy()[:, :, 0]
         ax[1, 0].imshow(pred, cmap='gray')
+        ax[1, 0].axis('off')
+
         pred = refine_edge(pred)
 
         pred = remove_noise2(pred, kernel_size=(3, 3), iterations=2).astype(np.uint8)
@@ -82,6 +89,8 @@ def main():
         if len(hull.shape) == 4:
             hull = hull[:, 0, :, :]
         ax[1, 1].imshow(cv2.drawContours(paper.copy(), [hull], -1, (0, 255, 0), 3))
+        ax[1, 1].axis('off')
+
         warp = four_point_transform(pred, hull[:, 0, :])
         foot = 255 - warp
         if foot.shape[0] < foot.shape[1]:
@@ -101,6 +110,7 @@ def main():
             p[0] += int(foot.shape[1] * 0.1)
 
         ax[1, 2].imshow(cv2.drawContours(cv2.cvtColor(foot.copy(), cv2.COLOR_GRAY2RGB), [box], -1, (0, 255, 0), 3))
+        ax[1, 2].axis('off')
 
         center = ((box[0] + box[2]) // 2).astype(np.uint8)
         angle = math.radians(max(rect[-1], 90 - rect[-1]))
@@ -111,6 +121,8 @@ def main():
         foot_box = np.where(foot_box > 127, 1, 0).astype(np.uint8)
         foot_box = remove_noise1(foot_box, (3, 3), 7)
         ax[1, 3].imshow(foot_box, cmap='gray')
+        ax[1, 3].axis('off')
+
         if foot_box.shape[0] > foot_box.shape[1]:
             edge1 = np.sum(foot_box[int(foot_box.shape[0] * 0.5), :])
         else:
