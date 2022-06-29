@@ -131,7 +131,7 @@ def main():
         length = length * factor + 1.5
         st.pyplot(fig)
 
-        st.text(f"Width: {round(width, 2)}, Length: {round(length, 2)}, Width/Length: {width / length}")
+        st.text(f"Width: {round(width, 2)}, Length: {round(length, 2)}, Angle: {round(rect[-1], 2)}")
         size_length = convert(width, length, mode='length')
         size_width = convert(width, length, mode='width')
 
