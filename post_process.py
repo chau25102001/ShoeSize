@@ -238,11 +238,6 @@ def subimage(image, center, theta, width, height):
     matrix = cv2.getRotationMatrix2D(center=center, angle=theta, scale=1)
     image = cv2.warpAffine(src=image, M=matrix, dsize=shape)
 
-    x = int(center[0] - width / 2)
-    y = int(center[1] - height / 2)
-
-    image = image[y:y + height, x:x + width]
-
     return image
 
 
